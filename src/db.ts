@@ -359,6 +359,10 @@ export const copiarDocumento = (pacienteId: number, rutaOrigen: string) =>
 export const abrirDocumento = (pacienteId: number, nombre: string) =>
   invoke<void>("abrir_documento", { pacienteId, nombre });
 
+/** Miniatura (URL `data:`) de una imagen adjunta; falla si no es imagen o es demasiado grande. */
+export const miniaturaDocumento = (pacienteId: number, nombre: string) =>
+  invoke<string>("miniatura_documento", { pacienteId, nombre });
+
 export const revelarDocumento = (pacienteId: number, nombre: string) =>
   invoke<void>("revelar_documento", { pacienteId, nombre });
 

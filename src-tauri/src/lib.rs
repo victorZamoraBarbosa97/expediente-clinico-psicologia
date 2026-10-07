@@ -50,6 +50,7 @@ pub fn run() {
             documentos::abrir_documento,
             documentos::revelar_documento,
             documentos::abrir_carpeta_documentos,
+            documentos::miniatura_documento,
             acceso_por_voz::alternar_acceso_por_voz,
             cerrar_app,
             cancelar_cierre

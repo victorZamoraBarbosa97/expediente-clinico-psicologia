@@ -26,6 +26,7 @@ import type { Documento } from "../tipos";
 import { intentar, mensajeDe } from "../utilidades/intentar";
 import type { Avisar } from "../utilidades/intentar";
 import { Confirmar } from "./ui";
+import Miniatura from "./Miniatura";
 import ModalPapelera from "./ModalPapelera";
 
 const EXT_IMAGEN = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"];
@@ -192,7 +193,12 @@ export default function Documentos({
                   )
                 }
               >
-                {icono(doc.tipo)}
+                <Miniatura
+                  pacienteId={pacienteId}
+                  ruta={doc.ruta}
+                  tipo={doc.tipo}
+                  alternativa={icono(doc.tipo)}
+                />
                 <span className="documento-nombre">{doc.titulo}</span>
                 {doc.tamano_bytes ? (
                   <span className="documento-tamano">{formatoTamano(doc.tamano_bytes)}</span>

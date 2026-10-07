@@ -6,8 +6,11 @@
 
 use std::ffi::OsStr;
 use std::fs;
+use std::io::Cursor;
 use std::path::{Path, PathBuf};
 
+use base64::Engine;
+use image::{DynamicImage, ImageDecoder, ImageFormat, ImageReader};
 use serde::Serialize;
 use tauri::Manager;
 use tauri_plugin_opener::OpenerExt;
@@ -130,6 +133,81 @@ pub fn revelar_documento(app: tauri::AppHandle, paciente_id: i64, nombre: String
         .map_err(|e| format!("No se pudo mostrar el archivo en su carpeta: {e}"))
 }
 
+/// Lado mayor de la miniatura, en píxeles.
+const LADO_MINIATURA: u32 = 240;
+/// Imágenes más pesadas que esto no se decodifican para la miniatura (se muestra el ícono).
+const MAX_BYTES_MINIATURA: u64 = 40 * 1024 * 1024;
+
+fn es_imagen(nombre: &str) -> bool {
+    Path::new(nombre)
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(|e| {
+            matches!(
+                e.to_ascii_lowercase().as_str(),
+                "png" | "jpg" | "jpeg" | "gif" | "webp" | "bmp"
+            )
+        })
+        .unwrap_or(false)
+}
+
+/// Reduce la imagen a una miniatura y la devuelve como URL `data:` lista para un `<img>`.
+/// Respeta la orientación EXIF (las fotos de celular suelen venir "acostadas").
+fn generar_miniatura(ruta: &Path) -> Result<String, String> {
+    let peso = fs::metadata(ruta).map(|m| m.len()).unwrap_or(0);
+    if peso > MAX_BYTES_MINIATURA {
+        return Err("La imagen es demasiado grande para una miniatura.".into());
+    }
+
+    let lector = ImageReader::open(ruta)
+        .map_err(|e| format!("No se pudo abrir la imagen: {e}"))?
+        .with_guessed_format()
+        .map_err(|e| format!("No se pudo leer la imagen: {e}"))?;
+    let mut decodificador = lector
+        .into_decoder()
+        .map_err(|e| format!("Formato de imagen no reconocido: {e}"))?;
+    let orientacion = decodificador.orientation().ok();
+    let mut imagen = DynamicImage::from_decoder(decodificador)
+        .map_err(|e| format!("No se pudo decodificar la imagen: {e}"))?;
+    if let Some(o) = orientacion {
+        imagen.apply_orientation(o);
+    }
+
+    let mini = imagen.thumbnail(LADO_MINIATURA, LADO_MINIATURA);
+    let mut salida = Cursor::new(Vec::new());
+    // JPEG para fotos (mucho más liviano); PNG solo si hay transparencia que conservar.
+    let mime = if mini.color().has_alpha() {
+        mini.write_to(&mut salida, ImageFormat::Png)
+            .map_err(|e| format!("No se pudo crear la miniatura: {e}"))?;
+        "image/png"
+    } else {
+        DynamicImage::ImageRgb8(mini.to_rgb8())
+            .write_to(&mut salida, ImageFormat::Jpeg)
+            .map_err(|e| format!("No se pudo crear la miniatura: {e}"))?;
+        "image/jpeg"
+    };
+
+    let base64 = base64::engine::general_purpose::STANDARD.encode(salida.into_inner());
+    Ok(format!("data:{mime};base64,{base64}"))
+}
+
+/// Miniatura de una imagen adjunta. Es `async` y decodifica en un hilo aparte para no
+/// congelar la ventana con fotos grandes.
+#[tauri::command]
+pub async fn miniatura_documento(
+    app: tauri::AppHandle,
+    paciente_id: i64,
+    nombre: String,
+) -> Result<String, String> {
+    if !es_imagen(&nombre) {
+        return Err("Ese archivo no es una imagen.".into());
+    }
+    let ruta = ruta_de(&app, paciente_id, &nombre)?;
+    tauri::async_runtime::spawn_blocking(move || generar_miniatura(&ruta))
+        .await
+        .map_err(|e| format!("No se pudo crear la miniatura: {e}"))?
+}
+
 #[tauri::command]
 pub fn abrir_carpeta_documentos(app: tauri::AppHandle, paciente_id: i64) -> Result<(), String> {
     let dir = carpeta_paciente(&app, paciente_id)?;
@@ -180,6 +258,41 @@ mod tests {
         fs::write(dir.join("nota (1).txt"), b"b").unwrap();
         assert_eq!(nombre_sin_colision(&dir, "nota.txt"), "nota (2).txt");
 
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn reconoce_las_extensiones_de_imagen() {
+        assert!(es_imagen("foto.JPG"));
+        assert!(es_imagen("dibujo.png"));
+        assert!(!es_imagen("estudio.pdf"));
+        assert!(!es_imagen("sin_extension"));
+        assert!(!es_imagen("logo.svg"));
+    }
+
+    #[test]
+    fn la_miniatura_es_pequena_y_valida() {
+        let dir = carpeta_temporal("miniatura");
+        let ruta = dir.join("grande.png");
+        image::RgbImage::from_pixel(1200, 600, image::Rgb([30, 120, 90]))
+            .save(&ruta)
+            .unwrap();
+
+        let url = generar_miniatura(&ruta).unwrap();
+        let datos = url.strip_prefix("data:image/jpeg;base64,").expect("JPEG sin transparencia");
+        let bytes = base64::engine::general_purpose::STANDARD.decode(datos).unwrap();
+        let mini = image::load_from_memory(&bytes).unwrap();
+        assert_eq!((mini.width(), mini.height()), (240, 120)); // conserva la proporción
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn archivo_que_no_es_imagen_da_error_sin_romper() {
+        let dir = carpeta_temporal("falsa");
+        let ruta = dir.join("falsa.png");
+        fs::write(&ruta, b"esto no es una imagen").unwrap();
+        assert!(generar_miniatura(&ruta).is_err());
         let _ = fs::remove_dir_all(&dir);
     }
 
