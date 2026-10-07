@@ -1,0 +1,28 @@
+# Dependencias y archivos generados
+node_modules
+dist
+coverage
+src-tauri/target
+src-tauri/gen/
+
+# Bases de datos y sus copias: son datos de pacientes, jamas al repositorio
+*.db
+*.db-wal
+*.db-shm
+*.db.antes-*
+*.sqlite
+*.sqlite3
+
+# Imagen fuente para generar los iconos (npm run tauri icon)
+src-tauri/icons/fuente.png
+
+# Editor y sistema operativo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secretos y registros
+.env
+.env.*
+*.log

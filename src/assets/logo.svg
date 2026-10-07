@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Logo de ejemplo">
+  <rect width="256" height="256" rx="48" fill="#2f6f5e"/>
+  <path fill="#fff" d="M108 58h40v50h50v40h-50v50h-40v-50H58v-40h50z"/>
+</svg>

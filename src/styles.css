@@ -1,0 +1,1182 @@
+/* ------------------------------------------------------------------
+   Fuentes autoalojadas via los paquetes @fontsource/* (ver imports en
+   main.tsx). La app corre sin internet, asi que no se puede depender de
+   Google Fonts: @fontsource empaqueta los .woff2 dentro de node_modules
+   y Vite los incluye en el build, sin descargas en tiempo de ejecucion.
+   ------------------------------------------------------------------ */
+
+:root {
+  --tinta: #16262a;
+  --tinta-suave: #4d6169;
+  --eucalipto: #2f5d50;
+  --eucalipto-oscuro: #234840;
+  --eucalipto-tenue: #e4ede8;
+  --papel: #f2f4f1;
+  --superficie: #ffffff;
+  --bruma: #d3ddd7;
+  --ladrillo: #8c3b3b;
+  --ladrillo-tenue: #f6e9e9;
+  --oro: #8a6d1f;
+
+--cuerpo: "Atkinson Hyperlegible Next", Verdana, system-ui, sans-serif;
+--titulo: "Source Serif 4", Georgia, serif;
+--mono:   "Atkinson Hyperlegible Mono", Consolas, monospace;
+
+  --r: 6px;
+  --sombra: 0 1px 2px rgba(22, 38, 42, 0.06), 0 4px 14px rgba(22, 38, 42, 0.05);
+  --foco: 0 0 0 3px #fff, 0 0 0 6px var(--eucalipto);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--cuerpo);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--tinta);
+  background: var(--papel);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--foco);
+  border-radius: 3px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--titulo);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* ------------------------------ Estructura ------------------------------ */
+.app {
+  display: grid;
+  /* Se encoge un poco antes de llegar al quiebre a una columna (900px), y no
+     crece de mas en monitores grandes: el ancho fijo de siempre, con algo de
+     margen para pantallas medianas. */
+  grid-template-columns: clamp(300px, 26vw, 380px) 1fr;
+  height: 100%;
+}
+
+.panel-izq {
+  background: var(--superficie);
+  border-right: 1px solid var(--bruma);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.panel-der {
+  overflow-y: auto;
+  min-height: 0;
+  padding: clamp(24px, 3vw, 48px) clamp(16px, 2vw, 32px) 80px;
+}
+
+.marca {
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--bruma);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.marca-logo {
+  width: 64px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.marca h1 {
+  font-size: 26px;
+  color: var(--eucalipto-oscuro);
+}
+
+.marca p {
+  margin: 2px 0 0;
+  font-size: 15px;
+  color: var(--tinta-suave);
+}
+
+.buscador {
+  padding: 18px 20px;
+}
+
+.lista {
+  overflow-y: auto;
+  flex: 1;
+  padding: 0 12px 12px;
+  /* Sin esto, cuando .panel-izq esta acotado por max-height (ventanas bajas o
+     angostas) y el resto del panel ya ocupa casi todo ese alto, flex:1 puede
+     colapsar la lista a 0 y el mensaje de "sin pacientes" desaparece del
+     todo en vez de solo scrollear. */
+  min-height: 140px;
+}
+
+.pie-izq {
+  border-top: 1px solid var(--bruma);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ------------------------------ Controles ------------------------------ */
+.campo {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.campo > span {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tinta-suave);
+  margin-bottom: 6px;
+}
+
+input,
+textarea,
+select {
+  font-family: var(--cuerpo);
+  font-size: 18px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--bruma);
+  border-radius: var(--r);
+  background: var(--superficie);
+  color: var(--tinta);
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+  border-color: #b9c8c0;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--eucalipto);
+  box-shadow: 0 0 0 3px var(--eucalipto-tenue);
+}
+
+textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.busca-input {
+  font-size: 20px;
+  padding: 14px 16px;
+}
+
+.btn {
+  font-family: var(--cuerpo);
+  font-size: 18px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 22px;
+  border: 2px solid transparent;
+  border-radius: var(--r);
+  cursor: pointer;
+  background: var(--eucalipto);
+  color: #fff;
+  transition: background 120ms ease;
+}
+
+.btn:hover {
+  background: var(--eucalipto-oscuro);
+}
+
+.btn.secundario {
+  background: var(--superficie);
+  color: var(--eucalipto-oscuro);
+  border-color: var(--bruma);
+}
+
+.btn.secundario:hover {
+  background: var(--eucalipto-tenue);
+  border-color: var(--eucalipto);
+}
+
+.btn.peligro {
+  background: var(--superficie);
+  color: var(--ladrillo);
+  border-color: #e2c9c9;
+}
+
+.btn.peligro:hover {
+  background: var(--ladrillo-tenue);
+  border-color: var(--ladrillo);
+}
+
+.btn.ancho {
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --------------------------- Tarjetas de paciente --------------------------- */
+.fila-paciente {
+  width: 100%;
+  text-align: left;
+  font-family: var(--cuerpo);
+  font-size: 18px;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: var(--r);
+  padding: 14px 16px;
+  cursor: pointer;
+  display: block;
+  color: inherit;
+}
+
+.fila-paciente:hover {
+  background: var(--papel);
+}
+
+.fila-paciente[aria-current="true"] {
+  background: var(--eucalipto-tenue);
+  border-color: var(--eucalipto);
+}
+
+.fila-paciente strong {
+  display: block;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.fila-paciente span {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--tinta-suave);
+}
+
+/* ------------------------- Firma: pestaña de expediente ------------------- */
+.expediente {
+  /* Crece con la ventana hasta un tope comodo de lectura, y se centra en vez
+     de pegarse a la izquierda cuando panel-der es mas ancho que eso: en
+     monitores grandes ya no queda todo el espacio libre amontonado a un lado. */
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.pestana {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  max-width: 100%;
+  background: var(--superficie);
+  border: 1px solid var(--bruma);
+  border-bottom: none;
+  border-radius: 10px 22px 0 0;
+  padding: 14px 32px 12px 22px;
+  box-shadow: 0 -1px 2px rgba(22, 38, 42, 0.04);
+}
+
+.pestana h2 {
+  font-size: 30px;
+  overflow-wrap: anywhere;
+}
+
+.pestana .folio {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--oro);
+  letter-spacing: 0.04em;
+}
+
+.cuerpo-expediente {
+  background: var(--superficie);
+  border: 1px solid var(--bruma);
+  border-radius: 0 var(--r) var(--r) var(--r);
+  padding: 28px 32px 34px;
+  box-shadow: var(--sombra);
+}
+
+.enlace-detalles {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  margin-bottom: 14px;
+  font-family: var(--cuerpo);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--eucalipto);
+  cursor: pointer;
+}
+
+.enlace-detalles:hover {
+  text-decoration: underline;
+}
+
+/* Colapsa en pantalla (el acordeon de "Ver detalles"), pero en @media print
+   mas abajo se vuelve a mostrar sin importar si estaba abierto o cerrado:
+   un expediente impreso siempre va completo. */
+.colapsado {
+  display: none !important;
+}
+
+.datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  gap: 18px 28px;
+  margin: 0 0 26px;
+}
+
+/* Cada dato en su propia tarjeta (fondo + sombra suave): sin esto, en modo
+   vista era puro texto plano sobre el mismo blanco de .cuerpo-expediente y
+   costaba distinguir donde empieza un dato y termina el siguiente. */
+.datos div {
+  background: var(--papel);
+  border: 1px solid var(--bruma);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  box-shadow: var(--sombra);
+}
+
+.datos div span {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tinta-suave);
+}
+
+.datos div p {
+  margin: 2px 0 0;
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.datos .mono {
+  font-family: var(--mono);
+}
+
+.bloque {
+  margin-bottom: 24px;
+}
+
+.bloque h3 {
+  font-size: 20px;
+  color: var(--eucalipto-oscuro);
+  margin-bottom: 8px;
+}
+
+.bloque p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Solo en modo vista (no en los formularios de edicion, que usan .bloque sin
+   esta clase): resalta cada apartado de notas clinicas con una franja de
+   color y sombra suave, para que el texto largo no se sienta como un bloque
+   continuo dificil de recorrer con la vista. */
+.bloque.bloque-vista {
+  background: var(--papel);
+  border-left: 4px solid var(--eucalipto);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 16px 20px;
+  box-shadow: var(--sombra);
+}
+
+.separador {
+  border: none;
+  border-top: 1px solid var(--bruma);
+  margin: 28px 0;
+}
+
+/* --------------------- Firma: linea de tiempo de sesiones --------------------- */
+.sesiones {
+  margin-top: 10px;
+}
+
+.sesion {
+  display: grid;
+  grid-template-columns: 118px 1fr;
+  gap: 0;
+}
+
+.sesion .canal {
+  border-right: 2px solid var(--bruma);
+  padding: 20px 20px 20px 0;
+  text-align: right;
+  position: relative;
+}
+
+.sesion .canal .num {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  display: block;
+}
+
+.sesion .canal .n {
+  font-family: var(--titulo);
+  font-size: 28px;
+  color: var(--eucalipto);
+  line-height: 1.1;
+}
+
+.sesion .canal::after {
+  content: "";
+  position: absolute;
+  right: -7px;
+  top: 28px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--eucalipto);
+  border: 3px solid var(--superficie);
+}
+
+.sesion.falta .canal::after {
+  background: var(--bruma);
+}
+
+.sesion .contenido {
+  padding: 20px 0 26px 26px;
+}
+
+.sesion .encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+/* Acordeon: contrae el cuerpo de cada sesion (notas, tecnicas, tareas...)
+   para que una lista larga de sesiones no vuelva interminable la pantalla;
+   el encabezado con fecha y etiquetas se queda siempre visible. */
+.sesion-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--eucalipto);
+  cursor: pointer;
+}
+
+.sesion-toggle:hover {
+  background: var(--eucalipto-tenue);
+}
+
+.sesion .fecha {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.etiqueta {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--eucalipto-tenue);
+  color: var(--eucalipto-oscuro);
+}
+
+.etiqueta.alerta {
+  background: var(--ladrillo-tenue);
+  color: var(--ladrillo);
+}
+
+.sesion .notas {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0 0 12px;
+}
+
+/* Resumen por defecto de cada sesion en la linea de tiempo (fuera del modo
+   "Ver sesion", que ya resalta con .bloque-vista): mismo tratamiento de
+   tarjeta para no perder la nota entre fecha, etiquetas y botones. */
+.sesion .contenido > .notas {
+  background: var(--papel);
+  border-left: 4px solid var(--eucalipto);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 14px 18px;
+  box-shadow: var(--sombra);
+}
+
+.sesion .sub {
+  font-size: 16px;
+  color: var(--tinta-suave);
+  overflow-wrap: anywhere;
+  margin: 0 0 4px;
+}
+
+.sesion .sub b {
+  color: var(--tinta);
+}
+
+.acciones-sesion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.btn.mini {
+  min-height: 40px;
+  font-size: 16px;
+  padding: 0 14px;
+}
+
+/* ------------------------- Firma: archivos adjuntos ------------------------- */
+.documentos-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.documentos-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.documentos-explorador {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.documento-tarjeta {
+  position: relative;
+  border: 2px solid var(--bruma);
+  border-radius: var(--r);
+  background: var(--papel);
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.documento-tarjeta:hover,
+.documento-tarjeta:focus-within {
+  border-color: var(--eucalipto);
+  background: var(--eucalipto-tenue);
+}
+
+.documento-abrir {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 18px 14px 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--eucalipto-oscuro);
+  font-family: var(--cuerpo);
+}
+
+.documento-nombre {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tinta);
+  text-align: center;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.documento-tamano {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--tinta-suave);
+}
+
+.documento-acciones {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.documento-mini {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--bruma);
+  background: var(--superficie);
+  color: var(--eucalipto-oscuro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.documento-mini:hover {
+  background: var(--eucalipto-tenue);
+  border-color: var(--eucalipto);
+}
+
+.documento-mini.peligro {
+  color: var(--ladrillo);
+}
+
+.documento-mini.peligro:hover {
+  background: var(--ladrillo-tenue);
+  border-color: var(--ladrillo);
+}
+
+/* Cubre toda la ventana porque el evento de arrastrar-y-soltar de Tauri es del
+   webview completo, no de un elemento particular: no hay forma de limitar
+   "donde" cae el archivo, asi que el aviso visual tampoco deberia fingir que
+   la hay. Ver Documentos.tsx. */
+.zona-arrastre {
+  position: fixed;
+  inset: 0;
+  background: rgba(47, 93, 80, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 45;
+  pointer-events: none;
+}
+
+.zona-arrastre-caja {
+  background: var(--superficie);
+  border: 3px dashed var(--eucalipto);
+  border-radius: 14px;
+  padding: 40px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: var(--eucalipto-oscuro);
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  max-width: 480px;
+  box-shadow: var(--sombra);
+}
+
+/* ------------------------------ Varios ------------------------------ */
+.vacio {
+  text-align: center;
+  padding: 70px 30px;
+  color: var(--tinta-suave);
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.vacio h2 {
+  font-size: 24px;
+  color: var(--tinta);
+  margin-bottom: 8px;
+}
+
+.barra-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.estado-guardado {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--eucalipto);
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.estado-guardado.pendiente {
+  color: var(--oro);
+}
+
+.estado-guardado.error {
+  color: var(--ladrillo);
+}
+
+.aviso {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--tinta);
+  color: #fff;
+  font-size: 17px;
+  padding: 14px 24px;
+  border-radius: var(--r);
+  box-shadow: var(--sombra);
+  z-index: 50;
+  max-width: 80vw;
+}
+
+.aviso.error {
+  background: var(--ladrillo);
+}
+
+.boton-flotante {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--eucalipto);
+  color: #fff;
+  box-shadow: var(--sombra);
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+  z-index: 30;
+}
+
+.boton-flotante:hover {
+  background: var(--eucalipto-oscuro);
+  transform: scale(1.05);
+}
+
+.fondo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 38, 42, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow-y: auto;
+  z-index: 40;
+}
+
+.modal {
+  background: var(--superficie);
+  border-radius: 10px;
+  padding: 30px 34px 34px;
+  width: 100%;
+  max-width: 780px;
+  box-shadow: 0 20px 50px rgba(22, 38, 42, 0.3);
+}
+
+.modal h2 {
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: var(--eucalipto-oscuro);
+}
+
+.rejilla-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0 24px;
+}
+
+.rejilla-form .completo {
+  grid-column: 1 / -1;
+}
+
+.pie-modal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+/* ------------------- Utilidades (antes eran style en linea) ------------------- */
+.texto-suave {
+  color: var(--tinta-suave);
+}
+
+.sin-dato {
+  color: var(--tinta-suave);
+}
+
+.sin-margen {
+  margin: 0;
+}
+
+.sin-margen-arriba {
+  margin-top: 0;
+}
+
+.sin-vinetas {
+  list-style: none;
+  margin: 0;
+}
+
+.separado-arriba {
+  margin-top: 20px;
+}
+
+.titulo-seccion {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.titulo-seccion.sin-margen {
+  margin-bottom: 0;
+}
+
+.contador {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--tinta-suave);
+}
+
+.subtitulo-grupo {
+  font-size: 20px;
+  color: var(--eucalipto-oscuro);
+  margin-bottom: 8px;
+}
+
+.bloque h3.titulo-chico {
+  font-size: 18px;
+}
+
+.titulo-con-icono {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Casilla de verificacion con su texto */
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 20px;
+}
+
+.casilla input {
+  width: 22px;
+  height: 22px;
+}
+
+.casilla.casilla-chica {
+  font-size: 16px;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.casilla.casilla-chica input {
+  width: 20px;
+  height: 20px;
+}
+
+/* Panel izquierdo */
+.campo.campo-busqueda {
+  margin-bottom: 12px;
+}
+
+.lista-mensaje {
+  padding: 8px 16px;
+  color: var(--tinta-suave);
+}
+
+.fila-paciente .etiqueta-cerrado {
+  margin-left: 8px;
+  font-family: var(--cuerpo);
+  font-size: 14px;
+  color: var(--eucalipto-oscuro);
+}
+
+.fila-botones {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fila-botones .btn {
+  flex: 1 1 120px;
+}
+
+.nota-atajo {
+  font-size: 13px;
+  color: var(--tinta-suave);
+  text-align: center;
+  margin: 2px 0 0;
+}
+
+/* Campos con autoguardado: el estado va pegado debajo del campo */
+.estado-guardado.bajo-campo {
+  margin-top: -14px;
+  margin-bottom: 14px;
+}
+
+/* Modales */
+.modal.angosto {
+  max-width: 520px;
+}
+
+.modal.medio {
+  max-width: 720px;
+}
+
+.modal-intro {
+  margin-top: -12px;
+  color: var(--tinta-suave);
+}
+
+.error-formulario {
+  color: var(--ladrillo);
+  font-weight: 700;
+  background: var(--ladrillo-tenue);
+  padding: 12px 16px;
+  border-radius: var(--r);
+}
+
+hr.separador.en-form {
+  margin: 6px 0 22px;
+}
+
+.subtitulo-form {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.nota-form {
+  margin-top: -8px;
+  margin-bottom: 4px;
+}
+
+/* Papeleras (pacientes, sesiones, archivos) */
+.lista-papelera {
+  list-style: none;
+  padding: 0;
+}
+
+.lista-papelera li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--bruma);
+}
+
+.papelera-dato {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-wrap: anywhere;
+}
+
+.papelera-detalle {
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+/* Bitacora */
+.lista-bitacora {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.lista-bitacora li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bruma);
+}
+
+.bitacora-momento {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--tinta-suave);
+}
+
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: 1fr;
+    /* panel-izq es un grid item con display:flex adentro; su min-height
+       implicito es "auto" (se ajusta al contenido), asi que un max-height en
+       el propio item no limita el alto de la fila del grid - el contenido se
+       desbordaba visiblemente encima de panel-der. Topar la FILA con minmax
+       es lo que de verdad lo contiene, dejando que overflow-y haga scroll
+       interno en vez de invadir lo de abajo. */
+    grid-template-rows: minmax(0, 45vh) 1fr;
+  }
+  .panel-izq {
+    border-right: none;
+    border-bottom: 1px solid var(--bruma);
+    overflow-y: auto;
+  }
+  .panel-der {
+    padding: 22px 18px 60px;
+  }
+  .sesion {
+    grid-template-columns: 88px 1fr;
+  }
+}
+
+/* Ventanas realmente angostas (el instalador exige minWidth 900 en
+   tauri.conf.json, pero esto cubre `npm run dev` en el navegador y cualquier
+   monitor mas chico del que se asuma). Colapsa las rejillas de dos columnas
+   a una sola y quita el carril con punto de las sesiones, que no cabe bien
+   en tan poco ancho. */
+@media (max-width: 640px) {
+  .panel-izq {
+    max-height: 50vh;
+  }
+  .buscador,
+  .pie-izq {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .panel-der {
+    padding: 18px 14px 48px;
+  }
+  .datos,
+  .rejilla-form {
+    grid-template-columns: 1fr;
+  }
+  .barra-acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .barra-acciones .btn {
+    width: 100%;
+  }
+  .pestana {
+    padding: 12px 20px 10px 16px;
+  }
+  .pestana h2 {
+    font-size: 24px;
+  }
+  .sesion {
+    grid-template-columns: 1fr;
+  }
+  .sesion .canal {
+    border-right: none;
+    border-bottom: 1px solid var(--bruma);
+    text-align: left;
+    padding: 14px 0 10px;
+  }
+  .sesion .canal::after {
+    display: none;
+  }
+  .sesion .contenido {
+    padding: 14px 0 20px;
+  }
+  .modal {
+    padding: 22px 20px 26px;
+  }
+  .fondo-modal {
+    padding: 20px 12px;
+  }
+  .documentos-explorador {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  .zona-arrastre-caja {
+    padding: 28px 24px;
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* --------------------------- Impresion / PDF --------------------------- */
+@media print {
+  body {
+    background: #fff;
+    font-size: 12pt;
+  }
+  .panel-izq,
+  .barra-acciones,
+  .acciones-sesion,
+  .aviso,
+  .estado-guardado,
+  .zona-arrastre,
+  .boton-flotante,
+  .no-imprimir {
+    display: none !important;
+  }
+  .app {
+    display: block;
+  }
+  .panel-der {
+    overflow: visible;
+    padding: 0;
+  }
+  .cuerpo-expediente,
+  .pestana {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+  .datos div,
+  .bloque.bloque-vista,
+  .sesion .contenido > .notas {
+    background: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+  .sesion {
+    break-inside: avoid;
+  }
+  /* El acordeon de "Ver detalles" es solo para pantalla: un expediente
+     impreso siempre sale completo, sin importar si estaba abierto o
+     cerrado al momento de imprimir. */
+  .colapsado {
+    display: grid !important;
+  }
+}

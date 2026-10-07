@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Consultorio",
+  "version": "../package.json",
+  "identifier": "com.consultorio.expediente",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Consultorio",
+        "width": 1280,
+        "height": 860,
+        "minWidth": 900,
+        "minHeight": 620,
+        "center": true,
+        "zoomHotkeysEnabled": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'",
+      "devCsp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "nsis"],
+    "shortDescription": "Expediente clínico local para psicología",
+    "longDescription": "Aplicación de escritorio para llevar el expediente clínico de pacientes. Funciona solo en esta computadora: no usa internet y no envía datos a ningún lado. Requiere el disco cifrado (BitLocker).",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "webviewInstallMode": {
+        "type": "offlineInstaller"
+      },
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico"
+      }
+    }
+  }
+}
