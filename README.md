@@ -51,42 +51,32 @@ El logo y los datos de este repositorio son de ejemplo.
 
 ## Capturas y video
 
-<!--
-  CÓMO AGREGAR LAS IMÁGENES SIN AUMENTAR EL PESO DEL REPOSITORIO
-  1. En GitHub abre este README y pulsa el lápiz (Edit).
-  2. Arrastra la imagen o el GIF al editor: GitHub lo sube a sus servidores y pega un enlace
-     como ![texto](https://github.com/user-attachments/assets/...).
-  3. Reemplaza el bloque "Captura pendiente" de abajo por ese enlace y guarda (Commit changes).
-  Las imágenes quedan en los servidores de GitHub, no dentro del repositorio.
--->
 
-<!-- VIDEO / GIF PRINCIPAL: arrastra aquí el video o GIF de recorrido completo (máx. 10 MB para GIF) -->
+
 > 🎬 *Video de recorrido: pendiente.*
+<img width="1920" height="1032" alt="consultorio_mwW38UD9EZ" src="https://github.com/user-attachments/assets/18e4e944-0aae-448f-8263-dfef004374fc" />
+<img width="1920" height="1032" alt="consultorio_yYN6gpVhfX" src="https://github.com/user-attachments/assets/516b33c4-6c82-4be2-8174-bcb7fa00207c" />
+<img width="1920" height="1032" alt="consultorio_gkwLUR3FY6" src="https://github.com/user-attachments/assets/6f4eda72-1493-4442-be81-567b510f3fa5" />
+
 
 **Lista de pacientes y búsqueda**
+<img width="1920" height="1009" alt="consultorio_OqD4aQjkYi" src="https://github.com/user-attachments/assets/40e90f46-903a-46bb-b48b-3afb875217d7" />
 
-<!-- CAPTURA 1: ventana completa con la lista a la izquierda y un expediente abierto a la derecha -->
-> 📷 *Captura pendiente: lista de pacientes y expediente abierto.*
 
 **Expediente y notas clínicas**
+<img width="1920" height="1009" alt="consultorio_qym2cKsqhr" src="https://github.com/user-attachments/assets/ed8fc8a0-c5ed-4bce-96bf-814b639cdd92" />
 
-<!-- CAPTURA 2: datos del paciente y notas clínicas desplegados -->
-> 📷 *Captura pendiente: datos del paciente y notas clínicas.*
 
 **Línea de tiempo de sesiones**
+<img width="1920" height="1009" alt="consultorio_Hsie30a0AY" src="https://github.com/user-attachments/assets/6394b348-4afb-46c4-a26f-de9a362d88cc" />
 
-<!-- CAPTURA 3: varias sesiones, una abierta en modo edición mostrando "✓ Guardado" -->
-> 📷 *Captura pendiente: sesiones y autoguardado.*
 
 **Archivos adjuntos**
-
-<!-- CAPTURA 4: sección de archivos adjuntos con varios tipos de archivo -->
-> 📷 *Captura pendiente: archivos adjuntos.*
+<img width="1920" height="1009" alt="consultorio_yBSXXMHlPt" src="https://github.com/user-attachments/assets/79c57ab5-a775-4cae-b4c8-c9eec957e679" />
 
 **Papelera y bitácora**
-
-<!-- CAPTURA 5: ventana de Papelera, y ventana de Bitácora (Ctrl+Shift+B) -->
-> 📷 *Captura pendiente: papelera y bitácora.*
+<img width="1920" height="1009" alt="consultorio_5jmaJIp6SK" src="https://github.com/user-attachments/assets/60bf7b13-3e92-4670-8ca4-f521d53f5f60" />
+<img width="1920" height="1009" alt="consultorio_rfMrp7O16R" src="https://github.com/user-attachments/assets/81222c0b-febe-4a37-92bb-1b33390ee048" />
 
 ## Decisiones técnicas que vale la pena revisar
 
